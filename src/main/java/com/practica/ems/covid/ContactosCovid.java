@@ -95,18 +95,18 @@ public class ContactosCovid {
 		FileReader fr = null;
 		BufferedReader br = null;
 		String datas[] = null, data = null;
-		loadDataFile(fichero, reset, archivo, fr, br, datas, data);
+		loadDataFile(fichero, reset, fr);
 		
 	}
 
 	@SuppressWarnings("resource")
-	public void loadDataFile(String fichero, boolean reset, File archivo, FileReader fr, BufferedReader br, String datas[], String data ) {
+	public void loadDataFile(String fichero, boolean reset, FileReader fr ) {
 		try {
 			// Apertura del fichero y creacion de BufferedReader para poder
 			// hacer una lectura comoda (disponer del metodo readLine()).
-			archivo = new File(fichero);
+			File archivo = new File(fichero);
 			fr = new FileReader(archivo);
-			br = new BufferedReader(fr);
+			BufferedReader br = new BufferedReader(fr);
 			if (reset) {
 				reset();
 			} 
@@ -115,8 +115,9 @@ public class ContactosCovid {
 			 * tiene el tipo PERSONA o LOCALIZACION y cargo la línea de datos en la 
 			 * lista correspondiente. Sino viene ninguno de esos tipos lanzo una excepción
 			 */
+			String data;
 			while ((data = br.readLine()) != null) {
-				datas = dividirEntrada(data.trim());
+				String[] datas = dividirEntrada(data.trim());
 				for (String linea : datas) {
 					String datos[] = this.dividirLineaData(linea);
 					comprobarTipo(datos);
@@ -207,13 +208,9 @@ public class ContactosCovid {
 
 	// Este metodo esta haciendo en realidad alta una persona, no debe estar en esta clase, se encarga por parte de clase Persona!
 	private Persona crearPersona(String[] data) throws EmsInvalidNumberOfDataException {
-
-		if (data.length != Constantes.MAX_DATOS_PERSONA ){
-		     throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
-		}else {
-			Persona persona = new Persona();
-			for (int i = 1; i < Constantes.MAX_DATOS_PERSONA; i++) {
-				String s = data[i];
+		if (data.length != Constantes.MAX_DATOS_PERSONA ){throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
+		}else {Persona persona = new Persona();
+			for (int i = 1; i < Constantes.MAX_DATOS_PERSONA; i++) {String s = data[i];
 				switch (i) {
 					case 1:
 						persona.setDocumento(s);
@@ -236,20 +233,15 @@ public class ContactosCovid {
 					case 7:
 						persona.setFechaNacimiento(parsearFecha(s));
 						break;
-				}
-			}
+				}}
 			return persona;
-		}
-	}
+		}}
 
 	// Mismo problema de responsabilidad
 	private PosicionPersona crearPosicionPersona(String[] data) throws EmsInvalidNumberOfDataException{
-		if (data.length != Constantes.MAX_DATOS_LOCALIZACION){
-			throw new EmsInvalidNumberOfDataException();
+		if (data.length != Constantes.MAX_DATOS_LOCALIZACION){throw new EmsInvalidNumberOfDataException();
 		}else {
-			PosicionPersona posicionPersona = new PosicionPersona();
-			String fecha = null, hora;
-			float latitud = 0, longitud;
+			PosicionPersona posicionPersona = new PosicionPersona();String fecha = null, hora;float latitud = 0, longitud;
 			for (int i = 1; i < Constantes.MAX_DATOS_LOCALIZACION; i++) {
 				String s = data[i];
 				switch (i) {
@@ -270,11 +262,9 @@ public class ContactosCovid {
 						longitud = Float.parseFloat(s);
 						posicionPersona.setCoordenada(new Coordenada(latitud, longitud));
 						break;
-				}
-			}
+				}}
 			return posicionPersona;
-		}
-	}
+		}}
 
 	// Tambien, alta una FechaHora, no es la responsabilidad de esta clase, se debe pasar a clase FechaHora
 	// Y FehcaHora ya esta implmentada por JAVA, no tiene sentido implmentar esta clase otra vez por nuestra cuenta.
