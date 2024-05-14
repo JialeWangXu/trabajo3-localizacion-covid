@@ -21,7 +21,7 @@ public class ListaContactos {
 		 * que esté en la lista. Entonces solo añadimos una coordenada.
 		 */
 		while (aux!=null && !salir) { // recorriendo la lista de contactos
-			// y recorrer para buscar algo no debe ser asunto de esta clase, sino de Listacoordenada. 
+			// y recorrer para buscar algo no debe ser asunto de esta clase, sino de Listacoordenada.
 			if(aux.getFecha().compareTo(p.getFechaPosicion())==0) { // Mirar si se encuentra el nodo temporal del fecha de p
 				encontrado = true;
 				salir = true;
@@ -65,32 +65,8 @@ public class ListaContactos {
 		if(!encontrado) { // no existe este nodo temporal, hay que crear uno nuevo, metiendo en la psoicion correcta
 			NodoTemporal nuevo = new NodoTemporal();
 			nuevo.setFecha(p.getFechaPosicion());
-
-
-			NodoPosicion npActual = nuevo.getListaCoordenadas();
-			NodoPosicion npAnt=null;
-			boolean npEncontrado = false;
-			while (npActual!=null && !npEncontrado) { // se tiene que volver a buscar el psoicion para insertar el nodo temporal nuevo
-				// esta buscando otra vez en la lista coordenada del nodo temporal nuevo si existe la coordenada de p, pero no veo necesario
-				// pq su listacoordenada es nuevo, entonce va a ser nulo.
-				if(npActual.getCoordenada().equals(p.getCoordenada())) {
-					npEncontrado=true;
-					npActual.setNumPersonas(npActual.getNumPersonas()+1);
-				}else {
-					npAnt = npActual;
-					npActual = npActual.getSiguiente();
-				}
-			}
-			if(!npEncontrado) { // igual que antes
-				NodoPosicion npNuevo = new NodoPosicion(p.getCoordenada(),  1, null);
-				if(nuevo.getListaCoordenadas()==null)
-					nuevo.setListaCoordenadas(npNuevo);
-				else
-					npAnt.setSiguiente(npNuevo);
-			}
-
-			// Todo lo anterior no tiene sentido, ya que es una lista coordenada nueva, no va a tener nada.
-
+			NodoPosicion npNuevo = new NodoPosicion(p.getCoordenada(),  1, null);
+			nuevo.setListaCoordenadas(npNuevo);
 			if(ant!=null) { // significa que la lista contactos no estaba vacia, insertar el nodo nuevo en su posicion
 				nuevo.setSiguiente(aux);
 				ant.setSiguiente(nuevo);
@@ -99,7 +75,6 @@ public class ListaContactos {
 				lista = nuevo;
 			}
 			this.size++;
-
 		}
 	}
 	
