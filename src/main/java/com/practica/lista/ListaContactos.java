@@ -16,65 +16,53 @@ public class ListaContactos {
 	public void insertarNodoTemporal (PosicionPersona p) {
 		NodoTemporal aux = lista, ant=null;
 		boolean salir=false,  encontrado = false;
-		/**
-		 * Busco la posición adecuada donde meter el nodo de la lista, excepto
-		 * que esté en la lista. Entonces solo añadimos una coordenada.
-		 */
-		while (aux!=null && !salir) { // recorriendo la lista de contactos
-			// y recorrer para buscar algo no debe ser asunto de esta clase, sino de Listacoordenada.
-			if(aux.getFecha().compareTo(p.getFechaPosicion())==0) { // Mirar si se encuentra el nodo temporal del fecha de p
+		while (aux!=null && !salir) {
+			if(aux.getFecha().compareTo(p.getFechaPosicion())==0) {
 				encontrado = true;
 				salir = true;
-				// encontrado y insertamos en la lista coordenada de este nodo temporal, el NodoPosicion que se corresponde con el de p
-				// sumandole 1 en caso de que si existe este coordenada en este nodo temporal
-				/**
-				 * Insertamos en la lista de coordenadas
-				 */
-				NodoPosicion npActual = aux.getListaCoordenadas();
-				NodoPosicion npAnt=null;		
-				boolean npEncontrado = false;
-				while (npActual!=null && !npEncontrado) { // recorrer lista coordenada de este nodo temporal
-					if(npActual.getCoordenada().equals(p.getCoordenada())) {
-						npEncontrado=true;
-						npActual.setNumPersonas(npActual.getNumPersonas()+1);
-					}else {
-						npAnt = npActual;
-						npActual = npActual.getSiguiente();
-					}
-				}
-				if(!npEncontrado) { // terminar de recorrer y resulta que no existe este coordenada en la lista Coordenada del nodo temporal
-					// hay que insertar un nuevo coordinada (mismo que el de p) en la lista coordinada del nodo temporal
-					NodoPosicion npNuevo = new NodoPosicion(p.getCoordenada(),1, null);
-					if(aux.getListaCoordenadas()==null) // caso de que no encuentra es debido que no tenia ninguno coordenada en la lista
-						aux.setListaCoordenadas(npNuevo);
-					else // en caso de que si habia alguna coordenada, insertamos ahora el nuevo en su posicion adecuada.
-						npAnt.setSiguiente(npNuevo);			
-				}
+				insertNodoPosicion(aux,p);
 			}else if(aux.getFecha().compareTo(p.getFechaPosicion())<0) {
 				ant = aux;
-				aux=aux.getSiguiente(); // pasar a siguiente nodo temporal (esto es cosa de recorrer la lista nodo temporal)
+				aux=aux.getSiguiente();
 			}else if(aux.getFecha().compareTo(p.getFechaPosicion())>0) {
-				salir=true; // resulta que es un nuevo nodo temporal, que no existe todavia en la lista de contactos
+				salir=true;
 			}
-
 		}
-		/**
-		 * No hemos encontrado ninguna posición temporal, así que
-		 * metemos un nodo nuevo en la lista
-		 */
-		if(!encontrado) { // no existe este nodo temporal, hay que crear uno nuevo, metiendo en la psoicion correcta
+		if(!encontrado) {
 			NodoTemporal nuevo = new NodoTemporal();
 			nuevo.setFecha(p.getFechaPosicion());
 			NodoPosicion npNuevo = new NodoPosicion(p.getCoordenada(),  1, null);
 			nuevo.setListaCoordenadas(npNuevo);
-			if(ant!=null) { // significa que la lista contactos no estaba vacia, insertar el nodo nuevo en su posicion
+			if(ant!=null) {
 				nuevo.setSiguiente(aux);
 				ant.setSiguiente(nuevo);
-			}else { // la lista contactos es vacia, el nodo nuevo va su primer nodo temporal.
+			}else {
 				nuevo.setSiguiente(lista);
 				lista = nuevo;
 			}
 			this.size++;
+		}
+	}
+
+	private void insertNodoPosicion(NodoTemporal aux , PosicionPersona p){
+		NodoPosicion npActual = aux.getListaCoordenadas();
+		NodoPosicion npAnt=null;
+		boolean npEncontrado = false;
+		while (npActual!=null && !npEncontrado) { // recorrer lista coordenada de este nodo temporal
+			if(npActual.getCoordenada().equals(p.getCoordenada())) {
+				npEncontrado=true;
+				npActual.setNumPersonas(npActual.getNumPersonas()+1);
+			}else {
+				npAnt = npActual;
+				npActual = npActual.getSiguiente();
+			}
+		}
+		if(!npEncontrado) {
+			NodoPosicion npNuevo = new NodoPosicion(p.getCoordenada(),1, null);
+			if(aux.getListaCoordenadas()==null)
+				aux.setListaCoordenadas(npNuevo);
+			else
+				npAnt.setSiguiente(npNuevo);
 		}
 	}
 	
