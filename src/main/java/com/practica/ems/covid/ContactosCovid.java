@@ -61,6 +61,7 @@ public class ContactosCovid {
 	public void loadData(String data, boolean reset) throws EmsInvalidTypeException, EmsInvalidNumberOfDataException,
 			EmsDuplicatePersonException, EmsDuplicateLocationException {
 		// borro información anterior
+		// Extraerlo
 		if (reset) {
 			this.poblacion = new Poblacion();
 			this.localizacion = new Localizacion();
@@ -75,6 +76,8 @@ public class ContactosCovid {
 			if (datos[0].equals("PERSONA")) {
 				if (datos.length != Constantes.MAX_DATOS_PERSONA) {
 					throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
+					// este excepcion se lanza cuando no estan completo los datos que exige para crear una persona
+					// no se debe lanzar por esta clase sino clase Persona que encarga da crear una Persona.
 				}
 				this.poblacion.addPersona(this.crearPersona(datos));
 			}
@@ -88,7 +91,6 @@ public class ContactosCovid {
 			}
 		}
 	}
-
 	public void loadDataFile(String fichero, boolean reset) {
 		File archivo = null;
 		FileReader fr = null;
@@ -195,6 +197,7 @@ public class ContactosCovid {
 			return lista;
 	}
 
+	// No es su responsabilidad de buscar persona y eliminar,se debe hacer por la clase poblacion.
 	public boolean delPersona(String documento) throws EmsPersonNotFoundException {
 		int cont = 0, pos = -1;
 		Iterator<Persona> it = this.poblacion.getLista().iterator();
@@ -222,6 +225,7 @@ public class ContactosCovid {
 		return cadenas;
 	}
 
+	// Este metodo esta haciendo en realidad alta una persona, no debe estar en esta clase, se encarga por parte de clase Persona!
 	private Persona crearPersona(String[] data) {
 		Persona persona = new Persona();
 		for (int i = 1; i < Constantes.MAX_DATOS_PERSONA; i++) {
@@ -253,6 +257,7 @@ public class ContactosCovid {
 		return persona;
 	}
 
+	// Mismo problema de responsabilidad
 	private PosicionPersona crearPosicionPersona(String[] data) {
 		PosicionPersona posicionPersona = new PosicionPersona();
 		String fecha = null, hora;
@@ -281,7 +286,9 @@ public class ContactosCovid {
 		}
 		return posicionPersona;
 	}
-	
+
+	// Tambien, alta una FechaHora, no es la responsabilidad de esta clase, se debe pasar a clase FechaHora
+	// Y FehcaHora ya esta implmentada por JAVA, no tiene sentido implmentar esta clase otra vez por nuestra cuenta.
 	private FechaHora parsearFecha (String fecha) {
 		int dia, mes, anio;
 		String[] valores = fecha.split("\\/");
