@@ -1,9 +1,5 @@
 package com.practica.lista;
-
-import java.util.ArrayList;
-
 import com.practica.genericas.Coordenada;
-
 /**
  * Nodo para la lista de coordenadas. En el guardamos cuántas personas  están
  * en una coordenada  en un momento temporal. 
